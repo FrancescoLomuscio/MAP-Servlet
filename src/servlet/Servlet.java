@@ -47,7 +47,8 @@ public class Servlet extends HttpServlet {
 						kmeans = new KMeansMiner(new Integer(nCluster));
 						int iterations = kmeans.kmeans(data);
 						try {
-							kmeans.salva(tabName + nCluster + ".dat");
+							String fileName = "C:/Users/PC/Desktop/FILE_SERVER/";
+							kmeans.salva(fileName+tabName + nCluster + ".dat");
 							StringBuffer buf = new StringBuffer("Numero iterazioni: ");
 							buf.append(iterations).append("\n");
 							buf.append(kmeans.getC().toString(data));
