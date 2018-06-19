@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import mining.KMeansMiner;
  * La classe Servlet implementa i metodi di HttpServlet per la comunicazione con
  * i client.
  */
+@WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
 
 	public Servlet() {
@@ -58,12 +60,12 @@ public class Servlet extends HttpServlet {
 					}
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
-					out.writeObject("Errore nell'acquisizione della tabella");
+					out.writeObject("Errore nell'acquisizione della tabella "+e.getClass().getName());
 				}
 			} else if ("FILE".equals(request.getParameter("command"))) {
 
 			} else {
-
+				out.writeObject("ELSE");
 			}
 		} finally {
 			out.close();
