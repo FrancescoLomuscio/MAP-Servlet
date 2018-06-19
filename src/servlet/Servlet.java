@@ -41,14 +41,15 @@ public class Servlet extends HttpServlet {
 			if ("DB".equals(request.getParameter("command"))) {
 				String tabName = request.getParameter("tabName");
 				String nCluster = request.getParameter("nCluster");
+				String fileName = request.getParameter("fileName");
 				try {
 					data = new Data(tabName);
 					try {
 						kmeans = new KMeansMiner(new Integer(nCluster));
 						int iterations = kmeans.kmeans(data);
 						try {
-							String fileName = "C:/Users/PC/Desktop/FILE_SERVER/";
-							kmeans.salva(fileName+tabName + nCluster + ".dat");
+							String filePath = "C:/Users/PC/Desktop/FILE_SERVER/";
+							kmeans.salva(filePath + fileName + ".dat");
 							StringBuffer buf = new StringBuffer("Numero iterazioni: ");
 							buf.append(iterations).append("\n");
 							buf.append(kmeans.getC().toString(data));
@@ -61,7 +62,7 @@ public class Servlet extends HttpServlet {
 					}
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
-					out.writeObject("Errore nell'acquisizione della tabella "+e.getClass().getName());
+					out.writeObject("Errore nell'acquisizione della tabella " + e.getClass().getName());
 				}
 			} else if ("FILE".equals(request.getParameter("command"))) {
 
