@@ -37,17 +37,19 @@ public class Data {
 	 * 
 	 * @param table
 	 *            Il nome della tabella nel database.
+	 * @param table
+	 *            L'indirizzo ip del client.
 	 * @throws NoValueException
 	 * @throws DatabaseConnectionException
 	 * @throws SQLException
 	 * @throws EmptySetException
 	 * @throws EmptyTypeException
 	 */
-	public Data(String table)
+	public Data(String table,String ip)
 			throws NoValueException, DatabaseConnectionException, SQLException, EmptySetException, EmptyTypeException {
 		DbAccess db = new DbAccess();
 		try {
-			db.initConnection();
+			db.initConnection(ip);
 			TableData td = new TableData(db);
 			TableSchema ts = new TableSchema(db, table);
 			for (int i = 0; i < ts.getNumberOfAttributes(); i++) {

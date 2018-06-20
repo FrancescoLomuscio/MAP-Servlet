@@ -46,7 +46,7 @@ public class Servlet extends HttpServlet {
 				String nCluster = request.getParameter("nCluster");
 				String fileName = request.getParameter("fileName");
 				try {
-					data = new Data(tabName);
+					data = new Data(tabName,request.getRemoteAddr());
 					try {
 						kmeans = new KMeansMiner(new Integer(nCluster), tabName);
 						int iterations = kmeans.kmeans(data);
@@ -69,7 +69,7 @@ public class Servlet extends HttpServlet {
 			} else if ("FILE".equals(request.getParameter("command"))) {
 				try {
 					kmeans = new KMeansMiner(filePath + request.getParameter("fileName") + ".dat");
-					data = new Data(kmeans.getTabName());
+					data = new Data(kmeans.getTabName(),request.getRemoteAddr());
 					out.writeObject(kmeans.getC().toString(data));
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {

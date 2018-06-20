@@ -20,7 +20,7 @@ public class DbAccess {
 	/**
 	 * L'indirizzo del server.
 	 */
-	private final String SERVER = "localhost";
+	private String SERVER = "localhost";
 	/**
 	 * Il nome del database.
 	 */
@@ -32,7 +32,7 @@ public class DbAccess {
 	/**
 	 * L'identificativo dell'utente.
 	 */
-	private final String USER_ID = "MapUser";
+	private final String USER_ID = "MapUserRemote";
 	/**
 	 * La password dell'utente per accedere alle tabelle del database.
 	 */
@@ -48,13 +48,15 @@ public class DbAccess {
 	 * @throws DatabaseConnectionException
 	 *             Se la connessione al database fallisce.
 	 */
-	public void initConnection() throws DatabaseConnectionException {
+	public void initConnection(String ip) throws DatabaseConnectionException {
 		try {
 			Class.forName(DRIVER_CLASS_NAME).newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
+			if(!"".equals(ip) && ip != null)
+				SERVER = ip;
 			conn = DriverManager.getConnection(DBMS + "://" + SERVER + ":" + PORT + "/" + DATABASE, USER_ID, PASSWORD);
 		} catch (SQLException e) {
 			e.printStackTrace();
