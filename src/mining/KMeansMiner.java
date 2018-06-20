@@ -19,6 +19,10 @@ public class KMeansMiner implements Serializable {
 	 * L'insieme dei cluster.
 	 */
 	private ClusterSet C;
+	/**
+	 * Il nome della tabella che si vuole clusterizzare.
+	 */
+	private String tabName;
 
 	/**
 	 * Salva su file lo stato dell'oggetto.
@@ -30,9 +34,10 @@ public class KMeansMiner implements Serializable {
 	 * @throws IOException
 	 *             Se vi è stato un errore nella scrittura su file.
 	 */
-	public void salva(String fileName) throws FileNotFoundException, IOException {
+	public void salva(String fileName,String tabName) throws FileNotFoundException, IOException {
 		ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(fileName));
 		outStream.writeObject(C);
+		outStream.writeObject(tabName);
 		outStream.close();
 	}
 
@@ -50,6 +55,7 @@ public class KMeansMiner implements Serializable {
 	public KMeansMiner(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
 		ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(fileName));
 		C = (ClusterSet) inStream.readObject();
+		tabName = (String) inStream.readObject();
 		inStream.close();
 	}
 
@@ -58,11 +64,21 @@ public class KMeansMiner implements Serializable {
 	 * 
 	 * @param k
 	 *            Il numero di cluster da generare.
+	 * @param tabName
+	 *            Il nome della tabella da clusterizzare.
 	 * @throws OutOfRangeSampleSize
 	 *             Se il numero di cluster è troppo grande o troppo piccolo.
 	 */
-	public KMeansMiner(int k) throws OutOfRangeSampleSize {
+	public KMeansMiner(int k,String tabName) throws OutOfRangeSampleSize {
 		C = new ClusterSet(k);
+		this.tabName = tabName;
+	}
+	
+	/**
+	 * @return Il nome della tabella clusterizzata.
+	 */
+	public String getTabName() {
+		return tabName;
 	}
 
 	/**
