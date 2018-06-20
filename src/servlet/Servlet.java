@@ -45,31 +45,56 @@ public class Servlet extends HttpServlet {
 				String tabName = request.getParameter("tabName");
 				String nCluster = request.getParameter("nCluster");
 				String fileName = request.getParameter("fileName");
+				String[] result = new String[2];
+				boolean fileExist = false;
+				synchronized(this){
+					File folder = new File(filePath);
+					String[] fileInFolder = folder.list();
+					String tempFileName = fileName + ".dat";
+					for(int i = 0; i < fileInFolder.length; i++) {
+						if(fileInFolder[i].equals(tempFileName)) {
+							fileExist = true;
+							break;
+						}
+					}
+				}
 				try {
-					data = new Data(tabName,request.getRemoteAddr());
+					data = new Data(tabName, request.getRemoteAddr());
 					try {
 						kmeans = new KMeansMiner(new Integer(nCluster), tabName);
 						int iterations = kmeans.kmeans(data);
 						try {
-							kmeans.salva(filePath + fileName + ".dat", tabName);
+							synchronized (this) {
+								kmeans.salva(filePath + fileName + ".dat", tabName);
+							}
 							StringBuffer buf = new StringBuffer("Numero iterazioni: ");
 							buf.append(iterations).append("\n");
 							buf.append(kmeans.getC().toString(data));
-							out.writeObject(buf.toString());
+							if(fileExist)
+								result[0] = "Attenzione, il file verrà sovrascritto!";
+							else
+								result[0] = "OK";
+							result[1] = buf.toString();
+							out.writeObject(result);
 						} catch (IOException e) {
-							out.writeObject("Errore nell'esecuzione");
+							result[0] = "Errore nell'esecuzione";
+							out.writeObject(result);
 						}
 					} catch (NumberFormatException | OutOfRangeSampleSize e) {
-						out.writeObject("Errore nel numero di cluster");
+						result[0] = "Errore nel numero di cluster";
+						out.writeObject(result);
 					}
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
-					out.writeObject("Errore nell'acquisizione della tabella");
+					result[0] = "Errore nell'acquisizione della tabella";
+					out.writeObject(result);
 				}
 			} else if ("FILE".equals(request.getParameter("command"))) {
 				try {
-					kmeans = new KMeansMiner(filePath + request.getParameter("fileName") + ".dat");
-					data = new Data(kmeans.getTabName(),request.getRemoteAddr());
+					synchronized (this) {
+						kmeans = new KMeansMiner(filePath + request.getParameter("fileName") + ".dat");
+					}
+					data = new Data(kmeans.getTabName(), request.getRemoteAddr());
 					out.writeObject(kmeans.getC().toString(data));
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
@@ -79,14 +104,16 @@ public class Servlet extends HttpServlet {
 				}
 
 			} else if ("SAVED".equals(request.getParameter("command"))) {
-				File saved = new File(filePath);
-				String[] savedList = saved.list();
-				for (int i = 0; i < savedList.length; i++) {
-					savedList[i] = savedList[i].substring(0, savedList[i].length() - 4);
+				synchronized (this) {
+					File saved = new File(filePath);
+					String[] savedList = saved.list();
+					for (int i = 0; i < savedList.length; i++) {
+						savedList[i] = savedList[i].substring(0, savedList[i].length() - 4);
+					}
+					out.writeObject(savedList);
 				}
-				out.writeObject(savedList);
 			} else {
-				out.writeObject("ELSE");
+				out.writeObject("Errore: impossibile eseguire la richiesta.");
 			}
 		} finally {
 			out.close();
