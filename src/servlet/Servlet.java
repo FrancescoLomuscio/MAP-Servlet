@@ -24,7 +24,7 @@ import mining.KMeansMiner;
  * La classe Servlet implementa i metodi di HttpServlet per la comunicazione con
  * i client.
  */
-@WebServlet("Servlet")
+@WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
 
 	public Servlet() {
