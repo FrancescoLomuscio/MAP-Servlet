@@ -45,11 +45,11 @@ public class Data {
 	 * @throws EmptySetException
 	 * @throws EmptyTypeException
 	 */
-	public Data(String table,String ip)
+	public Data(String table)
 			throws NoValueException, DatabaseConnectionException, SQLException, EmptySetException, EmptyTypeException {
 		DbAccess db = new DbAccess();
 		try {
-			db.initConnection(ip);
+			db.initConnection();
 			TableData td = new TableData(db);
 			TableSchema ts = new TableSchema(db, table);
 			for (int i = 0; i < ts.getNumberOfAttributes(); i++) {

@@ -24,11 +24,12 @@ import mining.KMeansMiner;
  * La classe Servlet implementa i metodi di HttpServlet per la comunicazione con
  * i client.
  */
-@WebServlet("/Servlet")
+@WebServlet("MAPE-Servlet/Servlet")
 public class Servlet extends HttpServlet {
 
 	public Servlet() {
 	}
+	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -59,7 +60,7 @@ public class Servlet extends HttpServlet {
 					}
 				}
 				try {
-					data = new Data(tabName, request.getRemoteAddr());
+					data = new Data(tabName);
 					try {
 						kmeans = new KMeansMiner(new Integer(nCluster), tabName);
 						int iterations = kmeans.kmeans(data);
@@ -94,7 +95,7 @@ public class Servlet extends HttpServlet {
 					synchronized (this) {
 						kmeans = new KMeansMiner(filePath + request.getParameter("fileName") + ".dat");
 					}
-					data = new Data(kmeans.getTabName(), request.getRemoteAddr());
+					data = new Data(kmeans.getTabName());
 					out.writeObject(kmeans.getC().toString(data));
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
@@ -119,16 +120,4 @@ public class Servlet extends HttpServlet {
 			out.close();
 		}
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	// protected void doPost(HttpServletRequest request, HttpServletResponse
-	// response)
-	// throws ServletException, IOException {
-	// // TODO Auto-generated method stub
-	// doGet(request, response);
-	// }
-
 }

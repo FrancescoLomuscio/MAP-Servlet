@@ -48,15 +48,13 @@ public class DbAccess {
 	 * @throws DatabaseConnectionException
 	 *             Se la connessione al database fallisce.
 	 */
-	public void initConnection(String ip) throws DatabaseConnectionException {
+	public void initConnection() throws DatabaseConnectionException {
 		try {
 			Class.forName(DRIVER_CLASS_NAME).newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
-			if(!"".equals(ip) && ip != null)
-				SERVER = ip;
 			conn = DriverManager.getConnection(DBMS + "://" + SERVER + ":" + PORT + "/" + DATABASE, USER_ID, PASSWORD);
 		} catch (SQLException e) {
 			e.printStackTrace();
