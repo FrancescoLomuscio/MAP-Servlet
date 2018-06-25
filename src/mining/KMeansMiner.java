@@ -69,6 +69,7 @@ public class KMeansMiner implements Serializable {
 				}
 			} finally {
 				conn.close();
+				db.closeConnection();
 			}
 		} else {
 			DbAccess db = new DbAccess();
@@ -97,6 +98,7 @@ public class KMeansMiner implements Serializable {
 				}
 			} finally {
 				conn.close();
+				db.closeConnection();
 			}
 		}
 	}
@@ -133,6 +135,7 @@ public class KMeansMiner implements Serializable {
 			}
 		} finally {
 			conn.close();
+			db.closeConnection();
 		}
 	}
 

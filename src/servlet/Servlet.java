@@ -126,6 +126,7 @@ public class Servlet extends HttpServlet {
 		TableSchema tableSchema = new TableSchema(db, tableName);
 		TreeSet<Object> savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName,
 				tableSchema.getColumn(0));
+		db.closeConnection();
 		return savingNames.contains(saveName);
 	}
 
@@ -143,6 +144,7 @@ public class Servlet extends HttpServlet {
 			}
 		} finally {
 			conn.close();
+			db.closeConnection();
 		}
 		return saves;
 	}
