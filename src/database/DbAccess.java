@@ -55,7 +55,7 @@ public class DbAccess {
 			e.printStackTrace();
 		}
 		try {
-			if(!"".equals(server) && server != null)
+			if (!"".equals(server) && server != null)
 				SERVER = server;
 			conn = DriverManager.getConnection(DBMS + "://" + SERVER + ":" + PORT + "/" + DATABASE, USER_ID, PASSWORD);
 		} catch (SQLException e) {
