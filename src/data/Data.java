@@ -45,11 +45,11 @@ public class Data {
 	 * @throws EmptySetException
 	 * @throws EmptyTypeException
 	 */
-	public Data(String table)
+	public Data(String table, String server)
 			throws NoValueException, DatabaseConnectionException, SQLException, EmptySetException, EmptyTypeException {
 		DbAccess db = new DbAccess();
 		try {
-			db.initConnection();
+			db.initConnection(server);
 			TableData td = new TableData(db);
 			TableSchema ts = new TableSchema(db, table);
 			for (int i = 0; i < ts.getNumberOfAttributes(); i++) {
@@ -242,8 +242,8 @@ public class Data {
 	/**
 	 * Restituisce il valore centroide delle tuple riferite da idList rispetto ad
 	 * attribute. Chiama computePrototype(Set of Integer, DiscreteAttribute) o
-	 * computePrototype(Set of Integer, ContinuousAttribute) in base al tipo reale di
-	 * attribute.
+	 * computePrototype(Set of Integer, ContinuousAttribute) in base al tipo reale
+	 * di attribute.
 	 * 
 	 * @param idList
 	 *            L'insieme di interi contenente gli indici delle tuple da

@@ -82,7 +82,7 @@ public class TableData {
 	public Set<Object> getDistinctColumnValues(String table, Column column) throws SQLException {
 		TreeSet<Object> sortedSet = new TreeSet<Object>();
 		Statement s = db.getConnection().createStatement();
-		ResultSet r = s.executeQuery("SELECT " + column.getColumnName() + " from MapDb." + table);
+		ResultSet r = s.executeQuery("SELECT " + column.getColumnName() + " from MapDB." + table);
 		if (column.isNumber()) {
 			while (r.next()) {
 				sortedSet.add(r.getDouble(1));
@@ -116,7 +116,7 @@ public class TableData {
 	public Object getAggregateColumnValue(String table, Column column, QUERY_TYPE aggregate)
 			throws SQLException, NoValueException {
 		Statement s = db.getConnection().createStatement();
-		ResultSet r = s.executeQuery("SELECT " + aggregate + "(" + column.getColumnName() + ") from MapDb." + table);
+		ResultSet r = s.executeQuery("SELECT " + aggregate + "(" + column.getColumnName() + ") from MapDB." + table);
 		if (!r.next())
 			throw new NoValueException();
 		Object result = r.getObject(1);

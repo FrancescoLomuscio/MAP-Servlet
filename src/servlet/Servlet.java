@@ -3,8 +3,14 @@ package servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,9 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import data.Data;
 import data.OutOfRangeSampleSize;
 import database.DatabaseConnectionException;
+import database.DbAccess;
 import database.EmptySetException;
 import database.EmptyTypeException;
 import database.NoValueException;
+import database.TableData;
+import database.TableSchema;
 import mining.KMeansMiner;
 
 /**
@@ -26,10 +35,10 @@ import mining.KMeansMiner;
  */
 @WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
+	final String databaseUrl = "map.ct3bmfk5atya.us-east-2.rds.amazonaws.com";
 
 	public Servlet() {
 	}
-	
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -40,45 +49,36 @@ public class Servlet extends HttpServlet {
 		KMeansMiner kmeans;
 		Data data;
 		ObjectOutputStream out = new ObjectOutputStream(response.getOutputStream());
-		String filePath = "C:/Users/PC/Desktop/FILE_SERVER/";
 		try {
 			if ("DB".equals(request.getParameter("command"))) {
 				String tabName = request.getParameter("tabName");
 				String nCluster = request.getParameter("nCluster");
-				String fileName = request.getParameter("fileName");
+				String saveName = request.getParameter("saveName");
 				String[] result = new String[2];
-				boolean fileExist = false;
-				synchronized(this){
-					File folder = new File(filePath);
-					String[] fileInFolder = folder.list();
-					String tempFileName = fileName + ".dat";
-					for(int i = 0; i < fileInFolder.length; i++) {
-						if(fileInFolder[i].equals(tempFileName)) {
-							fileExist = true;
-							break;
-						}
-					}
-				}
+				boolean saveExist;
 				try {
-					data = new Data(tabName);
+					synchronized (this) {
+						saveExist = isSaved(saveName);
+						data = new Data(tabName, databaseUrl);
+					}
 					try {
 						kmeans = new KMeansMiner(new Integer(nCluster), tabName);
 						int iterations = kmeans.kmeans(data);
 						try {
 							synchronized (this) {
-								kmeans.salva(filePath + fileName + ".dat", tabName);
+								kmeans.salva(saveName, saveExist);
 							}
 							StringBuffer buf = new StringBuffer("Numero iterazioni: ");
 							buf.append(iterations).append("\n");
 							buf.append(kmeans.getC().toString(data));
-							if(fileExist)
-								result[0] = "Attenzione, il file verrà sovrascritto!";
+							if (saveExist)
+								result[0] = "Attenzione, il salvataggio verrà sovrascritto!";
 							else
 								result[0] = "OK";
 							result[1] = buf.toString();
 							out.writeObject(result);
 						} catch (IOException e) {
-							result[0] = "Errore nell'esecuzione";
+							result[0] = "Errore nell'esecuzione ";
 							out.writeObject(result);
 						}
 					} catch (NumberFormatException | OutOfRangeSampleSize e) {
@@ -87,15 +87,15 @@ public class Servlet extends HttpServlet {
 					}
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
-					result[0] = "Errore nell'acquisizione della tabella";
+					result[0] = "Errore nella connessione al database";
 					out.writeObject(result);
 				}
-			} else if ("FILE".equals(request.getParameter("command"))) {
+			} else if ("LOAD".equals(request.getParameter("command"))) {
 				try {
 					synchronized (this) {
-						kmeans = new KMeansMiner(filePath + request.getParameter("fileName") + ".dat");
+						kmeans = new KMeansMiner(request.getParameter("loadName"));
+						data = new Data(kmeans.getTabName(), databaseUrl);
 					}
-					data = new Data(kmeans.getTabName());
 					out.writeObject(kmeans.getC().toString(data));
 				} catch (NoValueException | DatabaseConnectionException | SQLException | EmptySetException
 						| EmptyTypeException e) {
@@ -106,12 +106,13 @@ public class Servlet extends HttpServlet {
 
 			} else if ("SAVED".equals(request.getParameter("command"))) {
 				synchronized (this) {
-					File saved = new File(filePath);
-					String[] savedList = saved.list();
-					for (int i = 0; i < savedList.length; i++) {
-						savedList[i] = savedList[i].substring(0, savedList[i].length() - 4);
+					List<String> saves;
+					try {
+						saves = saves();
+						out.writeObject(saves);
+					} catch (DatabaseConnectionException | SQLException e) {
+						e.printStackTrace();
 					}
-					out.writeObject(savedList);
 				}
 			} else {
 				out.writeObject("Errore: impossibile eseguire la richiesta.");
@@ -119,5 +120,34 @@ public class Servlet extends HttpServlet {
 		} finally {
 			out.close();
 		}
+	}
+
+	private boolean isSaved(String saveName) throws DatabaseConnectionException, SQLException {
+		final String tableName = "savings";
+		DbAccess db = new DbAccess();
+		db.initConnection(databaseUrl);
+		TableData tableData = new TableData(db);
+		TableSchema tableSchema = new TableSchema(db, tableName);
+		TreeSet<Object> savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName,
+				tableSchema.getColumn(0));
+		return savingNames.contains(saveName);
+	}
+
+	private List<String> saves() throws DatabaseConnectionException, SQLException {
+		List<String> saves;
+		DbAccess db = new DbAccess();
+		db.initConnection(databaseUrl);
+		Connection conn = db.getConnection();
+		try {
+			Statement s = conn.createStatement();
+			ResultSet r = s.executeQuery("select name from MapDB.savings;");
+			saves = new ArrayList<String>();
+			while (r.next()) {
+				saves.add(r.getString(1));
+			}
+		} finally {
+			conn.close();
+		}
+		return saves;
 	}
 }
