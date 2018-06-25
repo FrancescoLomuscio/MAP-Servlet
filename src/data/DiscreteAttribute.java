@@ -28,15 +28,6 @@ class DiscreteAttribute extends Attribute implements Iterable<String> {
 	}
 
 	/**
-	 * Restituisce il numero dei valori distinti.
-	 * 
-	 * @return il numero dei valori distinti.
-	 */
-	int getNumberOfDistinctValues() {
-		return values.size();
-	}
-
-	/**
 	 * Calcola la frequenza del valore v nella tabella data secondo le righe
 	 * indicizzate da idList.
 	 * 

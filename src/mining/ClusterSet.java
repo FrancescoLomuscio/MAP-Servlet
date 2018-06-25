@@ -1,7 +1,6 @@
 package mining;
 
 import java.io.Serializable;
-
 import data.*;
 
 /**

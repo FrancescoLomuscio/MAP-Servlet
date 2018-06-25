@@ -61,7 +61,6 @@ public class Cluster implements Serializable {
 		return clusteredData.add(id);
 	}
 
-	// verifica se una transazione è clusterizzata nell'array corrente
 	/**
 	 * Stabilisce se la riga specificata è contenuta nel cluster.
 	 * 
@@ -73,9 +72,8 @@ public class Cluster implements Serializable {
 		return clusteredData.contains(id);
 	}
 
-	// remove the tuple that has changed the cluster
 	/**
-	 * Rimuove la specificata dal cluster.
+	 * Rimuove dal cluster la tupla specificata.
 	 * 
 	 * @param id
 	 *            La riga da rimuovere.

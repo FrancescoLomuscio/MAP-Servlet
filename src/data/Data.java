@@ -2,7 +2,6 @@ package data;
 
 import java.sql.SQLException;
 import java.util.*;
-
 import database.DatabaseConnectionException;
 import database.DbAccess;
 import database.EmptySetException;
@@ -37,8 +36,9 @@ public class Data {
 	 * 
 	 * @param table
 	 *            Il nome della tabella nel database.
-	 * @param table
-	 *            L'indirizzo ip del client.
+	 * @param server
+	 *            L'indirizzo del server.
+	 * 
 	 * @throws NoValueException
 	 * @throws DatabaseConnectionException
 	 * @throws SQLException
@@ -262,16 +262,15 @@ public class Data {
 	}
 
 	/**
-	 * Restituisce il valore centroide delle tuple riferite da idList rispetto ad
-	 * attribute.
+	 * Restituisce il valore centroide (il valore che compare più frequentemente)
+	 * delle tuple riferite da idList rispetto ad attribute.
 	 * 
 	 * @param idList
 	 *            L'insieme di interi contenente gli indici delle tuple da
 	 *            considerare.
 	 * @param attribute
 	 *            Attributo discreto rispetto al quale calcolare il centroide.
-	 * @return Il valore centroide(il valore che compare più frequentemente) nelle
-	 *         tuple rispetto ad attribute.
+	 * @return Il valore centroide nelle tuple rispetto ad attribute.
 	 */
 	private String computePrototype(Set<Integer> idList, DiscreteAttribute attribute) {
 		String max = "";
@@ -299,16 +298,15 @@ public class Data {
 	}
 
 	/**
-	 * Restituisce il valore centroide delle tuple riferite da idList rispetto ad
-	 * attribute.
+	 * Restituisce il valore centroide (il valore che compare più
+	 * frequentemente)delle tuple riferite da idList rispetto ad attribute.
 	 * 
 	 * @param idList
 	 *            L'insieme di interi contenente gli indici delle tuple da
 	 *            considerare.
 	 * @param attribute
 	 *            Attributo continuo rispetto al quale calcolare il centroide.
-	 * @return Il valore centroide(il valore che compare più frequentemente) nelle
-	 *         tuple rispetto ad attribute.
+	 * @return Il valore centroide nelle tuple rispetto ad attribute.
 	 */
 	private Double computePrototype(Set<Integer> idList, ContinuousAttribute attribute) {
 		Double average = 0.0;

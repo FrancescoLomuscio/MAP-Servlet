@@ -43,10 +43,13 @@ public class DbAccess {
 	private Connection conn;
 
 	/**
-	 * Inizializza una connessione al database con nome contenuto in DATABASE.
+	 * Inizializza la connessione al database con indirizzo specificato, localhost
+	 * se il parametro è nullo.
 	 * 
+	 * @param server
+	 *            l'indirizzo del database.
 	 * @throws DatabaseConnectionException
-	 *             Se la connessione al database fallisce.
+	 *             Se vi è un errore nella connessione al database.
 	 */
 	public void initConnection(String server) throws DatabaseConnectionException {
 		try {

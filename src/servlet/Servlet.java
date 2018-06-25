@@ -1,9 +1,7 @@
 package servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,13 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import data.Data;
 import data.OutOfRangeSampleSize;
 import database.DatabaseConnectionException;
@@ -35,6 +31,9 @@ import mining.KMeansMiner;
  */
 @WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
+	/**
+	 * La stringa che rappresenta l'indirizzo del database.
+	 */
 	final private String databaseUrl = "map.ct3bmfk5atya.us-east-2.rds.amazonaws.com";
 
 	/**
@@ -118,6 +117,13 @@ public class Servlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Verifica che il nome del salvataggio specificato sia esistente.
+	 * @param saveName Il nome del salvataggio.
+	 * @return true se è gia presente un salvataggio con tale nome, false altrimenti.
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	private boolean isSaved(String saveName) throws DatabaseConnectionException, SQLException {
 		final String tableName = "savings";
 		DbAccess db = new DbAccess();
@@ -130,6 +136,12 @@ public class Servlet extends HttpServlet {
 		return savingNames.contains(saveName);
 	}
 
+	/**
+	 * Restituisce la lista dei nomi dei salvataggi presenti sul database.
+	 * @return La lista dei nomi dei salvataggi presenti sul database.
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
 	private List<String> saves() throws DatabaseConnectionException, SQLException {
 		List<String> saves;
 		DbAccess db = new DbAccess();
