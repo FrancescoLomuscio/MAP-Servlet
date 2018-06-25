@@ -35,10 +35,7 @@ import mining.KMeansMiner;
  */
 @WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
-	final String databaseUrl = "map.ct3bmfk5atya.us-east-2.rds.amazonaws.com";
-
-	public Servlet() {
-	}
+	final private String databaseUrl = "map.ct3bmfk5atya.us-east-2.rds.amazonaws.com";
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -103,7 +100,6 @@ public class Servlet extends HttpServlet {
 				} catch (ClassNotFoundException e) {
 					out.writeObject("Errore nell'esecuzione");
 				}
-
 			} else if ("SAVED".equals(request.getParameter("command"))) {
 				synchronized (this) {
 					List<String> saves;
