@@ -9,7 +9,8 @@ import java.util.*;
  * La classe Cluster modella un cluster.
  *
  */
-public class Cluster implements Serializable {
+//$
+class Cluster implements Serializable {
 	/**
 	 * Il centroide del cluster.
 	 */
