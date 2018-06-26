@@ -6,10 +6,4 @@ package data;
  *
  */
 public class OutOfRangeSampleSize extends Exception {
-	/**
-	 * Stampa su standard output un messaggio rappresentativo dell'eccezione.
-	 */
-	public void print() {
-		System.out.println("Exception: number of clusters out of range");
-	}
 }

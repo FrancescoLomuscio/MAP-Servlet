@@ -128,6 +128,9 @@ public class Data {
 		return data.get(exampleIndex).get(attributeIndex);
 	}
 
+	//!!!
+	//NON VIENE MAI UTILIZZATO!!!
+	//!!!
 	/**
 	 * Restituisce L'attributo nell'indice specificato.
 	 * 
@@ -135,7 +138,7 @@ public class Data {
 	 *            L'indice dell' attributo.
 	 * @return L'attributo nell'indice specificato.
 	 */
-	Attribute getAttribute(int index) {
+	private Attribute getAttribute(int index) {
 		return attributeSet.get(index);
 	}
 
@@ -144,10 +147,8 @@ public class Data {
 	 */
 	public String toString() {
 		String s = "";
-		for (int i = 0; i < attributeSet.size(); i++) {
-			s += attributeSet.get(i).getName();
-			if (i != attributeSet.size() - 1)
-				s += ",";
+		for(Attribute attribute : attributeSet) {
+			s += attribute.getName();
 		}
 		s += "\n";
 		for (int i = 0; i < numberOfExamples; i++) {

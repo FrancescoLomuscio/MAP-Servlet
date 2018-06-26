@@ -19,7 +19,8 @@ public class Tuple implements Serializable {
 	 * @param size
 	 *            La dimensione della tupla da costruire.
 	 */
-	public Tuple(int size) {
+	//$
+	Tuple(int size) {
 		tuple = new Item[size];
 	}
 
@@ -82,12 +83,12 @@ public class Tuple implements Serializable {
 	 * @return La media calcolata.
 	 */
 	public double avgDistance(Data data, Set<Integer> clusteredData) {
-		double p = 0.0, sumD = 0.0;
+		double p = 0.0, sumDist = 0.0;
 		for (Integer i : clusteredData) {
 			double d = getDistance(data.getItemSet(i));
-			sumD += d;
+			sumDist += d;
 		}
-		p = sumD / clusteredData.size();
+		p = sumDist / clusteredData.size();
 		return p;
 	}
 }
