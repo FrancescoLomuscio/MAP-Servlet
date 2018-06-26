@@ -130,12 +130,16 @@ public class Servlet extends HttpServlet {
 	private boolean isSaved(String saveName) throws DatabaseConnectionException, SQLException {
 		final String tableName = "savings";
 		DbAccess db = new DbAccess();
+		TreeSet<Object> savingNames ;
+		try {
 		db.initConnection(databaseUrl);
 		TableData tableData = new TableData(db);
 		TableSchema tableSchema = new TableSchema(db, tableName);
-		TreeSet<Object> savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName,
+		savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName,
 				tableSchema.getColumn(0));
-		db.closeConnection();
+		}finally {
+			db.closeConnection();
+		}
 		return savingNames.contains(saveName);
 	}
 
