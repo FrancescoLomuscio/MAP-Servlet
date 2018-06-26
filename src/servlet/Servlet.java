@@ -30,7 +30,7 @@ import mining.KMeansMiner;
  * i client.
  */
 @WebServlet("/Servlet")
-public class Servlet extends HttpServlet {
+class Servlet extends HttpServlet {
 	/**
 	 * La stringa che rappresenta l'indirizzo del database.
 	 */
