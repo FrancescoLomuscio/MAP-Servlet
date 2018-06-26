@@ -119,8 +119,11 @@ public class Servlet extends HttpServlet {
 
 	/**
 	 * Verifica che il nome del salvataggio specificato sia esistente.
-	 * @param saveName Il nome del salvataggio.
-	 * @return true se è gia presente un salvataggio con tale nome, false altrimenti.
+	 * 
+	 * @param saveName
+	 *            Il nome del salvataggio.
+	 * @return true se è gia presente un salvataggio con tale nome, false
+	 *         altrimenti.
 	 * @throws DatabaseConnectionException
 	 * @throws SQLException
 	 */
@@ -138,6 +141,7 @@ public class Servlet extends HttpServlet {
 
 	/**
 	 * Restituisce la lista dei nomi dei salvataggi presenti sul database.
+	 * 
 	 * @return La lista dei nomi dei salvataggi presenti sul database.
 	 * @throws DatabaseConnectionException
 	 * @throws SQLException
