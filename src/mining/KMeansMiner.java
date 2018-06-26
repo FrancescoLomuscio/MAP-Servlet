@@ -11,9 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.TreeSet;
+
 import data.*;
 import database.DatabaseConnectionException;
 import database.DbAccess;
+import database.TableData;
+import database.TableSchema;
 
 /**
  * La classe KMeansMiner gestisce l'implementazione dell’algoritmo kmeans.
@@ -34,11 +38,14 @@ public class KMeansMiner implements Serializable {
 	 * 
 	 * @param saveName
 	 *            Il nome del salvataggio.
+	 * @return true se il salvataggio è stato sovrascritto, false se è stato creato
+	 *         un nuovo salvataggio.
 	 * @throws DatabaseConnectionException
-	 * @throws IOException
 	 * @throws SQLException
+	 * @throws IOException
 	 */
-	public void salva(String saveName, boolean isSaved) throws DatabaseConnectionException, SQLException, IOException {
+	public boolean salva(String saveName) throws DatabaseConnectionException, SQLException, IOException {
+		boolean isSaved = isSaved(saveName);
 		if (isSaved) {
 			DbAccess db = new DbAccess();
 			db.initConnection("map.ct3bmfk5atya.us-east-2.rds.amazonaws.com");
@@ -97,6 +104,7 @@ public class KMeansMiner implements Serializable {
 				db.closeConnection();
 			}
 		}
+		return isSaved;
 	}
 
 	/**
@@ -199,5 +207,30 @@ public class KMeansMiner implements Serializable {
 			C.updateCentroids(data);
 		} while (changedCluster);
 		return numberOfIterations;
+	}
+
+	/**
+	 * Verifica che il nome del salvataggio specificato sia esistente.
+	 * 
+	 * @param saveName
+	 *            Il nome del salvataggio.
+	 * @return true se è gia presente un salvataggio con tale nome, false
+	 *         altrimenti.
+	 * @throws DatabaseConnectionException
+	 * @throws SQLException
+	 */
+	private boolean isSaved(String saveName) throws DatabaseConnectionException, SQLException {
+		final String tableName = "savings";
+		DbAccess db = new DbAccess();
+		TreeSet<Object> savingNames;
+		try {
+			db.initConnection("map.ct3bmfk5atya.us-east-2.rds.amazonaws.com");
+			TableData tableData = new TableData(db);
+			TableSchema tableSchema = new TableSchema(db, tableName);
+			savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName, tableSchema.getColumn(0));
+		} finally {
+			db.closeConnection();
+		}
+		return savingNames.contains(saveName);
 	}
 }

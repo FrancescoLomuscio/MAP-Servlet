@@ -54,7 +54,6 @@ public class Servlet extends HttpServlet {
 				boolean saveExist;
 				try {
 					synchronized (this) {
-						saveExist = isSaved(saveName);
 						data = new Data(tabName, databaseUrl);
 					}
 					try {
@@ -62,7 +61,7 @@ public class Servlet extends HttpServlet {
 						int iterations = kmeans.kmeans(data);
 						try {
 							synchronized (this) {
-								kmeans.salva(saveName, saveExist);
+								saveExist = kmeans.salva(saveName);
 							}
 							StringBuffer buf = new StringBuffer("Numero iterazioni: ");
 							buf.append(iterations).append("\n");
@@ -117,31 +116,7 @@ public class Servlet extends HttpServlet {
 		}
 	}
 
-	/**
-	 * Verifica che il nome del salvataggio specificato sia esistente.
-	 * 
-	 * @param saveName
-	 *            Il nome del salvataggio.
-	 * @return true se è gia presente un salvataggio con tale nome, false
-	 *         altrimenti.
-	 * @throws DatabaseConnectionException
-	 * @throws SQLException
-	 */
-	private boolean isSaved(String saveName) throws DatabaseConnectionException, SQLException {
-		final String tableName = "savings";
-		DbAccess db = new DbAccess();
-		TreeSet<Object> savingNames ;
-		try {
-		db.initConnection(databaseUrl);
-		TableData tableData = new TableData(db);
-		TableSchema tableSchema = new TableSchema(db, tableName);
-		savingNames = (TreeSet<Object>) tableData.getDistinctColumnValues(tableName,
-				tableSchema.getColumn(0));
-		}finally {
-			db.closeConnection();
-		}
-		return savingNames.contains(saveName);
-	}
+
 
 	/**
 	 * Restituisce la lista dei nomi dei salvataggi presenti sul database.

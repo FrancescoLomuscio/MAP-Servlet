@@ -28,16 +28,6 @@ public class KMeansMinerTest {
 	 */
 	private static KMeansMiner kmeans;
 
-	@BeforeAll
-	static void setUpAll() {
-		try {
-			kmeans = new KMeansMiner(5, "playtennis");
-			kmeans.salva("KMeansMinerTestData", true);
-		} catch (DatabaseConnectionException | SQLException | IOException | OutOfRangeSampleSize e) {
-			fail();
-		}
-	}
-
 	/**
 	 * Inizializza prima di ogni test kmeans con un numero di cluster pari a 5.
 	 * Questa configurazione verrà usata per i test come caso generico.
@@ -59,7 +49,7 @@ public class KMeansMinerTest {
 	void caricaTest() {
 		try {
 			kmeans.kmeans(new Data("playtennis", "map.ct3bmfk5atya.us-east-2.rds.amazonaws.com"));
-			kmeans.salva("KMeansMinerTestData", true);
+			kmeans.salva("KMeansMinerTestData");
 			assertAll("Test caricamento", () -> {
 				assertEquals(kmeans.getC().toString(), new KMeansMiner("KMeansMinerTestData").getC().toString(),
 						"Test caricamento fallito");
