@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * La classe Tuple modella il concetto di tupla come sequenza di coppie attributo-valore.
+ * La classe Tuple modella il concetto di tupla come sequenza di coppie
+ * attributo-valore.
  */
 public class Tuple implements Serializable {
 	/**
@@ -19,7 +20,6 @@ public class Tuple implements Serializable {
 	 * @param size
 	 *            La dimensione della tupla da costruire.
 	 */
-	//$
 	Tuple(int size) {
 		tuple = new Item[size];
 	}

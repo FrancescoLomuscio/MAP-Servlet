@@ -128,9 +128,6 @@ public class Data {
 		return data.get(exampleIndex).get(attributeIndex);
 	}
 
-	//!!!
-	//NON VIENE MAI UTILIZZATO!!!
-	//!!!
 	/**
 	 * Restituisce L'attributo nell'indice specificato.
 	 * 
@@ -138,7 +135,7 @@ public class Data {
 	 *            L'indice dell' attributo.
 	 * @return L'attributo nell'indice specificato.
 	 */
-	private Attribute getAttribute(int index) {
+	public Attribute getAttribute(int index) {
 		return attributeSet.get(index);
 	}
 

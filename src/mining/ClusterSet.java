@@ -52,8 +52,7 @@ public class ClusterSet implements Serializable {
 	 *            L'indice in cui si trova il cluster.
 	 * @return Il cluster in posizione i.
 	 */
-	//Useless method
-	private Cluster get(int i) {
+	public Cluster get(int i) {
 		return C[i];
 	}
 
